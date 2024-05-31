@@ -29,7 +29,7 @@ export class UserService {
 
   async auth(email: string, password: string) {
     const userData = await this.userRepository.findOne({
-      where: { email },
+      where: { email }
     });
 
     if (!userData) {
@@ -39,6 +39,8 @@ export class UserService {
     const token = this.jwtService.sign(userData.id_user.toString());
 
     const user = await this.getUserInfo(userData.nickname);
+
+    if (!user) throw new NotFoundException('User not found');
 
     return { token, ...user };
   }
